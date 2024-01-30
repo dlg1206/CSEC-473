@@ -1,0 +1,16 @@
+# Python Virtual Enviroment
+.env
+venv
+.venv
+
+# Convential commits
+/node_modules/
+.husky
+commitlint.config.js
+package-lock.json
+package.json
+
+# IDE
+*.iml
+.idea
+.vscode

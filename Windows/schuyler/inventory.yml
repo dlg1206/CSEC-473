@@ -1,0 +1,16 @@
+Windows:
+  hosts:
+    192.168.100.101:
+  children:
+    Primary_Domain_Controller:
+  vars: 
+    ansible_user: ansible
+    ansible_password: ansible
+    ansible_connection: winrm
+    ansible_winrm_server_cert_validation: ignore
+
+Primary_Domain_Controller:
+  hosts:
+    192.168.100.101:
+
+

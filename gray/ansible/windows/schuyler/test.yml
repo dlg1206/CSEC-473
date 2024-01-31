@@ -1,0 +1,8 @@
+---
+  - name: Do a test  
+    hosts: localhost
+    gather_facts: no
+    tasks:
+    - name: include a role
+      include_role: 
+        name: changePassword

@@ -1,0 +1,4 @@
+---
+# tasks file for newRole
+  - debug:
+      msg: "whatever"

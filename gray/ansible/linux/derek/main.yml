@@ -1,0 +1,14 @@
+---
+
+- name: Create Openstack Instances
+  gather_facts: no
+  hosts: localhost
+  tasks:
+    
+
+    - name: Verify Image Names
+      include_role:
+        name: verify_image
+      vars:
+        image_name: "{{ hostvars[item].image }}"
+      with_items: "{{ hostvars }}"      

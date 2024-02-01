@@ -1,0 +1,15 @@
+---
+# tasks file for verify_image
+
+- name: Check if image is available in openstack
+  shell: openstack image list | grep -q "{{ image_name }}"
+  register: out
+  ignore_errors: true
+
+
+- name: Validate findings
+  assert:
+    that: out.rc == 0
+    fail_msg: "{{ image_name }} is not available in openstack!"
+    success_msg: "{{ image_name }} is available in openstack"
+

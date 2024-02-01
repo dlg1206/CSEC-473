@@ -2,13 +2,40 @@
 
 - name: Create Openstack Instances
   gather_facts: no
-  hosts: localhost
+  hosts: localhost 
   tasks:
-    
 
-    - name: Verify Image Names
+    - name: Authenticate Host
+      block:
+        
+        - name: Run Test OpenStack Command
+          shell: "openstack server list"
+        
+        - debug:
+            msg: "Ansible Host is authenticated!"
+
+      rescue:
+
+        - fail:
+            msg: "Ansible Host is not authenticated! 
+              Please run the openstack rc script and try again"
+
+
+
+    - name: Create SSH Keys
       include_role:
-        name: verify_image
+        name: create_ssh_keys
+      vars:
+        key_name: "{{ hostvars[item].ssh_key }}"
+      with_items: "{{ hostvars }}"
+
+
+
+    - name: Create Instances
+      include_role:
+        name: create_instances
       vars:
         image_name: "{{ hostvars[item].image }}"
-      with_items: "{{ hostvars }}"      
+      with_items: "{{ hostvars }}"
+        #    - debug:
+        #msg: "{{ image }}"

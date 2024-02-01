@@ -1,14 +1,15 @@
-[ubuntu]
-129.168.0.1 ansible_user=foo
-129.168.0.2
+[blue]
+ubuntu1 ansible_ssh_host=192.168.2.163
+ubuntu2 ansible_ssh_host=192.168.2.164
 
-[ubuntu:vars]
-image=UbuntuJammy2204
+windows1 ansible_ssh_host=192.168.2.165 image=WinSrv2022-20348-2022
 
 
-[windows]
-129.168.0.3
-129.168.0.4
+[blue:vars]
+# line takes pres
+image=UbuntuJammy2204 
+network_id=39727c2e-891f-4bb6-8057-24ab56689a7a
 
-[windows:vars]
-image=Ubuntmmy22
+# Optional
+# flavor - default small
+# boot-from-vol: def 250

@@ -1,0 +1,6 @@
+---
+# tasks file for create_instance
+
+- name: Verify Image Name
+  include_tasks: verify_image.yml
+  when: image is defined

@@ -1,5 +1,5 @@
 ---
-# tasks file for verify_image
+# Use OpenStack CLI to verify the image is ok
 
 - name: Check if image is available in openstack
   shell: openstack image list | grep -q "{{ image_name }}"

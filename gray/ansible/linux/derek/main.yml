@@ -36,5 +36,16 @@
       vars:
         box: "{{ hostvars[item] }}"
       with_items: "{{ hostvars }}"
-        #    - debug:
-        #msg: "{{ image }}"
+
+    
+
+- name: Test Instance Connection
+  gather_facts: no
+  hosts: all
+  tasks:
+
+    - name: Ensure Box is available
+      wait_for_connection:
+        timeout: 120
+
+    - ping:

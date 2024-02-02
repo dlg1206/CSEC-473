@@ -1,9 +1,0 @@
-- name: Create Instance
-  command: >
-    openstack server create {{ inventory_hostname }} 
-    --flavor {{ flavor }}
-    --image {{ image }}
-    --boot-from-volume {{ boot-from-volume }}
-    --nic net-id={{ network_id }},v4-fixed-ip={{ ansible_ssh_host }
-    --key-name {{ ssh_key }}
-  ignore_errors: yes

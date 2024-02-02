@@ -1,7 +1,7 @@
 ---
 # vars file for create_instance
 
-box_name: "{{ box.invetory_name }}"
+box_name: "{{ box.inventory_hostname }}"
 box_ip: "{{ box.ansible_ssh_host }}"
 image: "{{ box.image }}"
 ssh_key: "{{ box.ssh_key }}"

@@ -2,14 +2,13 @@
 ubuntu1 ansible_ssh_host=192.168.2.163
 ubuntu2 ansible_ssh_host=192.168.2.164
 
-
 [blue:vars]
 # line takes pres
-image=UbuntuJammy2204 
+image=UbuntuJammy2204-Desktop
 network_id=39727c2e-891f-4bb6-8057-24ab56689a7a
-ssh_key=testkey
+ssh_key=test_key
 
 
 # Optional
 # flavor - default small
-# boot-from-vol: def 250
+# boot_from_vol: defaul 100

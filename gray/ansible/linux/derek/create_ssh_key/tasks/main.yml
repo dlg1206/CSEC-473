@@ -1,10 +1,27 @@
 ---
 # tasks file for create_ssh_key
 
-- name: Get Exisiting Keys
-  shell: "openstack keypair list"
+- name: Get Existing Keys
+  shell: openstack keypair list
   register: keys
 
 - name: Create SSH Keys
-  shell: "openstack keypair create {{ ssh_key_name }}"
+  block:
+
+    # Create new key using host's public key for ansible ssh connectivity
+    - name: Execute openstack cli commands
+      shell: >
+        openstack keypair create {{ ssh_key_name }}
+        --public-key {{ control_node_key }}
+    
+    - name: Get new key details
+      shell: openstack keypair show {{ ssh_key_name }}
+      register: key_details
+
+
+    - name: Report key details
+      debug:
+        msg: "{{ key_details.stdout.split('\n') }}"
+      
+
   when: ssh_key_name not in keys.stdout

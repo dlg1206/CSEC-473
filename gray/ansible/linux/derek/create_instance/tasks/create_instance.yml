@@ -1,10 +1,8 @@
-
-- name: Create Instance
+- name: Execute OpenStack CLI to Create Instance 
   shell: >
-    openstack server create {{ inventory_hostname }} 
+    openstack server create {{ box_name }} 
     --flavor {{ flavor }}
     --image {{ image }}
     --boot-from-volume {{ boot_from_volume }}
     --nic net-id={{ network_id }},v4-fixed-ip={{ box_ip }}
     --key-name {{ ssh_key }}
-    #when: ansible_ssh_host != "127.0.0.1"

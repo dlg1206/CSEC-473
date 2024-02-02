@@ -1,6 +1,6 @@
 ---
   - name: Do a test  
-    hosts: localhost
+    hosts: dc01
     gather_facts: no
     tasks:
     - name: include a role

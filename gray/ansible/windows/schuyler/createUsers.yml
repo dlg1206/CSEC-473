@@ -1,8 +1,0 @@
----
-  - name: Do a test  
-    hosts: dc01
-    gather_facts: no
-    tasks:
-    - name: include a role
-      include_role: 
-        name: addUser

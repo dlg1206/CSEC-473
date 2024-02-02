@@ -1,0 +1,27 @@
+---
+# tasks file for createWindows
+- name: Create windows instance
+   #will simply use the cli command rather than the module because the module is buggy
+  command: >
+    openstack server create
+    --flavor {{ flavorSize }}
+    --image {{ hostImage }}
+    --boot-from-volume {{ volumeSize }}
+    --user-data ./{{ script }}
+    --nic net-id={{ network_id }},v4-fixed-ip={{ hostip }}
+    --key-name {{ keyName }}
+    {{ hostname }}   
+  ignore_errors: no
+  when: script is defined
+- name: Create linux instance
+   #will simply use the cli command rather than the module because the module is buggy
+  command: >
+    openstack server create
+    --flavor {{ flavorSize }}
+    --image {{ hostImage }}
+    --boot-from-volume {{ volumeSize }}
+    --nic net-id={{ network_id }},v4-fixed-ip={{ hostip }}
+    --key-name {{ keyName }}
+    {{ hostname }}
+  ignore_errors: no
+  when: script is not defined

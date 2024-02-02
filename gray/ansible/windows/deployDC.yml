@@ -1,0 +1,21 @@
+---
+# Alex Nasca
+# Modified by Schuyler Dillon 
+# 1/17/2024
+# Active directory Domain Controller setup
+
+# This script will deploy one domain controller ready windows 2022 server 
+
+#Task 1: download necessary package for openstack deployment
+- name: Install openstack.cloud collection
+  hosts: localhost
+  vars:
+    network_id: d8dcba1c-9405-433c-a2e5-f4c205e7cade
+    DC_ip: 192.168.100.101
+    DC_name: Primary_DC
+    script: prepare-for-ansible-windows.ps1
+    hostImage: WinSrv2022-20348-2022
+  gather_facts: no
+  roles:
+    - { role: openstack, become: yes }
+    - createWindows

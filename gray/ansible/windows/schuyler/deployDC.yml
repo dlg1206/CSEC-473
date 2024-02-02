@@ -11,12 +11,8 @@
   hosts: localhost
   gather_facts: no
   become: true
-
-  tasks:
-    - name: Install openstack.cloud collection
-      ansible.builtin.shell:
-        cmd: "ansible-galaxy collection install openstack.cloud"
-
+  roles:
+    - openstack
 
 
 # Task 2: create instance and connect to network

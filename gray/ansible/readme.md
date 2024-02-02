@@ -8,6 +8,14 @@ The deployLinux.yml and deployWindows.yml scripts create openstack hosts that fi
 > If you run into an issue running these scripts make sure you source the rc file and enter your openstack password.<br>
 > -  `source sdd4181-openrc.sh`
 
+### Usage
+Running either deployLinux.yml or deployWindows.yml can be done as follows: <br>
+``` 
+    ansible-playbook deployLinux.yml
+    ansible-playbook deployWindows.yml
+```
+
+### Editing the Plays
  To change the network, hostname, IP address, etc., you have to go into the deploy.yml files and change the variables 
 
  ```

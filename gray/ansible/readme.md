@@ -18,4 +18,4 @@ The deployLinux.yml and deployWindows.yml scripts create openstack hosts that fi
     hostip: 192.168.1.10                                (Unique: IP you want the host to have)
     hostname: linux_host                                (hostname)
     hostImage: UbuntuJammy2204-Desktop                  (pick from list in openstack)
-    ```
+```

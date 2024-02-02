@@ -5,26 +5,28 @@
     dc_address: 192.168.100.101
     dc_netmask_cidr: 24
     dc_gateway: 192.168.0.1
-    dc_hostname: 'primary-dc'
-    domain_name: "melody.mayhem"
+    dc_hostname: 'dc01'
+    domain_name: "demo.lab"
     local_admin: '.\administrator'
-    ansible_user: 'ansible'
-    ansible_password: 'ansible'
+    ansibleUser: 'ansible'
+    ansiblePass: 'ansible'
     dc_password: 'P@ssw0rd'
     recovery_password: 'P@ssw0rd'
     upstream_dns_1: 8.8.8.8
     upstream_dns_2: 8.8.4.4
-    reverse_dns_zone: "192.168.0.0/16" 
+    reverse_dns_zone: "192.168.0.0/16"
+    ntp_servers: "0.us.pool.ntp.org,1.us.pool.ntp.org"
   gather_facts: no
+
   tasks:
-  - name: Add host to Ansible inventory
+  - name: Add host to Ansible inventory with new IP
     add_host:
       name: '{{ dc_address }}'
-      ansible_user: '{{ ansible_user }}'
-      ansible_password: '{{ ansible_password }}'
+      ansible_user: '{{ ansibleUser }}'
+      ansible_password: '{{ ansiblePass }}'
       ansible_connection: winrm
+      ansible_winrm_transport: ntlm
       ansible_winrm_server_cert_validation: ignore
-
   - name: Set Password
     win_user:
       name: administrator
@@ -32,8 +34,8 @@
       state: present
     delegate_to: '{{ dc_address }}'
     ignore_errors: True
- 
-  - name: Add updated host to Ansible inventory 
+  - name: Add host to Ansible inventory with new Password
+    add_host:
       name: '{{ dc_address }}'
       ansible_user: '{{ local_admin }}'
       ansible_password: '{{ dc_password }}'
@@ -49,12 +51,21 @@
       - Public
     tags: disable_firewall
     delegate_to: '{{ dc_address }}'
+  - name: Change the hostname 
+    win_hostname:
+      name: '{{ dc_hostname }}'
+    register: res
+    delegate_to: '{{ dc_address }}'
+  - name: Reboot
+    win_reboot:
+    when: res.reboot_required   
+    delegate_to: '{{ dc_address }}'
   - name: Install Active Directory
-    win_feature: >
-         name=AD-Domain-Services
-         include_management_tools=yes
-         include_sub_features=yes
-         state=present
+    win_feature:
+      name: AD-Domain-Services
+      include_management_tools: yes
+      include_sub_features: yes
+      state: present
     register: result
     delegate_to: '{{ dc_address }}'
   - name: Create Domain
@@ -65,8 +76,28 @@
     delegate_to: "{{ dc_address }}"
   - name: reboot server
     win_reboot:
-     msg: "Installing AD. Rebooting..."
-     pre_reboot_delay: 15
+      msg: "Installing AD. Rebooting..."
+      pre_reboot_delay: 15
+    when: ad.changed
+    delegate_to: "{{ dc_address }}"
+  - name: Install Active Directory
+    win_feature:
+      name: AD-Domain-Services
+      include_management_tools: yes
+      include_sub_features: yes
+      state: present
+    register: result
+    delegate_to: '{{ dc_address }}'
+  - name: Create Domain
+    win_domain:
+      dns_domain_name: '{{ domain_name }}'
+      safe_mode_password: '{{ recovery_password }}'
+    register: ad
+    delegate_to: "{{ dc_address }}"
+  - name: reboot server
+    win_reboot:
+      msg: "Installing AD. Rebooting..."
+      pre_reboot_delay: 15
     when: ad.changed
     delegate_to: "{{ dc_address }}"
   - name: Set internal DNS server 
@@ -83,3 +114,4 @@
     register: result           
     until: result is succeeded
     ignore_errors: true
+

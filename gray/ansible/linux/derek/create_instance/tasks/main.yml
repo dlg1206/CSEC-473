@@ -3,4 +3,6 @@
 
 - name: Verify Image Name
   include_tasks: verify_image.yml
-  when: image is defined
+
+- name: "Create Instance of {{ image }}"
+  include_tasks: create_instance.yml

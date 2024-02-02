@@ -20,22 +20,21 @@
             msg: "Ansible Host is not authenticated! 
               Please run the openstack rc script and try again"
 
-
-
+    
     - name: Create SSH Keys
       include_role:
-        name: create_ssh_keys
+        name: create_ssh_key
       vars:
-        key_name: "{{ hostvars[item].ssh_key }}"
+        ssh_key_name: "{{ hostvars[item].ssh_key }}"
       with_items: "{{ hostvars }}"
 
-
+  
 
     - name: Create Instances
       include_role:
-        name: create_instances
+        name: create_instance
       vars:
-        image_name: "{{ hostvars[item].image }}"
+        box: "{{ hostvars[item] }}"
       with_items: "{{ hostvars }}"
         #    - debug:
         #msg: "{{ image }}"

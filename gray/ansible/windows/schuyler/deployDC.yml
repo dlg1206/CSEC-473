@@ -41,4 +41,4 @@
         --nic net-id={{ network_id }},v4-fixed-ip={{ DC_ip }}
         --key-name Ansible-Key
         {{ DC_name }}
-      ignore_errors: yes
+      ignore_errors: no

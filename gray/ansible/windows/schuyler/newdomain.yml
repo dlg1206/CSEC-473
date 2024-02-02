@@ -6,16 +6,13 @@
     dc_netmask_cidr: 24
     dc_gateway: 192.168.0.1
     dc_hostname: 'dc01'
-    domain_name: "demo.lab"
+    domain_name: "melody.mayhem"
     local_admin: '.\administrator'
     ansibleUser: 'ansible'
     ansiblePass: 'ansible'
     dc_password: 'P@ssw0rd'
     recovery_password: 'P@ssw0rd'
-    upstream_dns_1: 8.8.8.8
-    upstream_dns_2: 8.8.4.4
     reverse_dns_zone: "192.168.0.0/16"
-    ntp_servers: "0.us.pool.ntp.org,1.us.pool.ntp.org"
   gather_facts: no
 
   tasks:
@@ -80,26 +77,6 @@
       pre_reboot_delay: 15
     when: ad.changed
     delegate_to: "{{ dc_address }}"
-  - name: Install Active Directory
-    win_feature:
-      name: AD-Domain-Services
-      include_management_tools: yes
-      include_sub_features: yes
-      state: present
-    register: result
-    delegate_to: '{{ dc_address }}'
-  - name: Create Domain
-    win_domain:
-      dns_domain_name: '{{ domain_name }}'
-      safe_mode_password: '{{ recovery_password }}'
-    register: ad
-    delegate_to: "{{ dc_address }}"
-  - name: reboot server
-    win_reboot:
-      msg: "Installing AD. Rebooting..."
-      pre_reboot_delay: 15
-    when: ad.changed
-    delegate_to: "{{ dc_address }}"
   - name: Set internal DNS server 
     win_dns_client:
       adapter_names: '*'
@@ -109,7 +86,7 @@
   - name: Create reverse DNS zone
     win_shell: "Add-DnsServerPrimaryZone -NetworkID {{reverse_dns_zone}} -ReplicationScope Forest"
     delegate_to: "{{ dc_address }}"    
-    retries: 30
+    retries: 2
     delay: 60
     register: result           
     until: result is succeeded

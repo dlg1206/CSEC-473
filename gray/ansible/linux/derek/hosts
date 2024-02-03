@@ -10,7 +10,7 @@ network_id=39727c2e-891f-4bb6-8057-24ab56689a7a
 ssh_key=test_key
 
 [windows]
-#salmon ansible_ssh_host=192.168.2.165 image=WinSrv2019-17763-2022
+salmon ansible_ssh_host=192.168.2.165 image=WinSrv2019-17763-2022
 
 [windows:vars]
 ansible_user=ansible

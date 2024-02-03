@@ -1,0 +1,48 @@
+---
+# tasks file for changePassword
+  - name: Create several domain users
+    ansible.windows.win_user:
+      name: "{{ item }}"
+      password: "{{ domUserPass }}"
+      state: present
+      groups:
+        - Users
+        - Domain Users    
+    ignore_errors: true
+    loop:
+      - VanHalen
+      - Metallica
+      - BonJovi
+      - Beatles
+      - Abba
+      - NeilDiamond
+      - Madonna
+      - Nena
+      - Prince
+      - MJ
+      - Gaga
+      - Beyonce
+      - TaylorSwift
+      - SnoopDogg
+      - BritneySpears
+      - Elvis
+      - Rihanna
+  - name: Create a few domain admins
+    ansible.windows.win_user:
+      name: "{{ item }}"
+      password: "{{ domAdminPass }}"
+      state: present
+      groups:
+        - Users
+        - Domain Users
+        - Domain Admins
+    loop:
+      - GrayScoring
+      - Bach
+      - Vivaldi
+      - Beethoven
+      - Mozart
+      - Brahms
+      - Haydn
+      - Chopin
+      - Tchaikovsky

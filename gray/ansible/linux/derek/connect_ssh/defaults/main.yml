@@ -1,0 +1,7 @@
+---
+# defaults file for connect_ssh
+
+linux_local_key: ~/.ssh/id_rsa.pub
+windows_local_key: C:\Users\ansible\.ssh\id_rsa.pub
+
+local_key: "{{ inux_local_key }}"

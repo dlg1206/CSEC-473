@@ -1,0 +1,67 @@
+---
+# tasks file for connect_ssh
+
+
+- name: Set Path to SSH Key
+  set_fact:
+    local_key: "{{ windows_local_key }}"
+  when: windows == 'true'
+
+
+
+- name: Distribute SSH Keys
+  block:
+
+    - name: Create tmp Key Storage
+      file:
+        path: "{{ tmp_key_dir }}"
+        state: directory
+      delegate_to: localhost
+      run_once: yes
+
+
+    - name: Linux - Pull Keys from Nodes
+      synchronize:
+        mode: pull
+        src: "{{ local_key }}"
+        dest: "{{ tmp_key_dir }}/{{ inventory_hostname }}.key"
+      delegate_to: localhost
+      when: windows != 'true'
+
+
+    - name: Windows - Pull Keys from Nodes
+      ansible.windows.win_copy:
+
+        src: "{{ local_key }}"
+        dest: "{{ tmp_key_dir }}/{{ inventory_hostname }}.key"
+      delegate_to: localhost
+      when: windows == 'true'
+
+
+    - name: Copy Localhost Key
+      shell: "cp {{ local_key }} {{ tmp_key_dir }}/localhost.key"
+      delegate_to: localhost
+
+
+    - name: Create authorized_keys File
+      shell: "cat {{ tmp_key_dir}}/* > {{ tmp_key_dir }}/authorized_keys"
+      register: new_keys
+      delegate_to: localhost
+
+
+    - name: Push authorized_keys to Nodes
+      synchronize:
+        src: "{{ tmp_key_dir }}/authorized_keys"
+        dest: ~/.ssh/authorized_keys
+      delegate_to: localhost
+
+
+  # Cleanup; always remove keys even if error
+  always:
+
+    - name: Remove tmp Key Storage
+      file:
+        state: absent
+        path: "{{ tmp_key_dir }}"
+      delegate_to: localhost
+      run_once: yes

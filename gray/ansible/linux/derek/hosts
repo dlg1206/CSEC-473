@@ -4,7 +4,7 @@ snook ansible_ssh_host=192.168.2.164
 
 
 [linux:vars]
-# line takes pres
+# Required
 image=UbuntuJammy2204-Desktop
 network_id=39727c2e-891f-4bb6-8057-24ab56689a7a
 ssh_key=test_key
@@ -13,16 +13,15 @@ ssh_key=test_key
 salmon ansible_ssh_host=192.168.2.165 image=WinSrv2019-17763-2022
 
 [windows:vars]
+# Required
 ansible_user=ansible
 ansible_password=ansible
 ansible_connection=winrm
 ansible_winrm_server_cert_validation=ignore
-flavor=large
-boot_from_volume=250
 ssh_key=test_key
 network_id=39727c2e-891f-4bb6-8057-24ab56689a7a
 windows=true
 
 # Optional
-# flavor - default small
-# boot_from_vol: defaul 100
+flavor=large
+boot_from_volume=250

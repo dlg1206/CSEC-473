@@ -1,0 +1,23 @@
+---
+
+- name: Windows - Pull Key from Node
+  block:
+    - name: Windows - Get Key Contents
+      ansible.windows.win_powershell:
+        script: "cat {{ local_key }}"
+      register: out
+    
+    - name: Windows - Save Contents to Host
+      copy:
+        content: "{{ out.output[0] }}"
+        dest: "{{ tmp_key_dir }}/{{ inventory_hostname }}.key"
+      delegate_to: localhost
+  
+  when: mode == 'pull'
+
+- name: Windows - Push authorized_keys to Node
+  ansible.windows.win_copy:
+    src: "{{ tmp_key_dir }}/authorized_keys"
+    dest: C:\Users\ansible\.ssh\authorized_keys
+
+  when: mode == 'push'

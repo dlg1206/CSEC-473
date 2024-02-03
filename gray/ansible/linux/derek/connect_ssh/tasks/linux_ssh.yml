@@ -1,0 +1,16 @@
+---
+
+- name: Linux - Pull Keys from Node
+  synchronize:
+    mode: pull
+    src: "{{ local_key }}"
+    dest: "{{ tmp_key_dir }}/{{ inventory_hostname }}.key"
+  delegate_to: localhost
+  when: mode == 'pull'
+
+- name: Linux - Push authorized_keys to Node
+  synchronize:
+    src: "{{ tmp_key_dir }}/authorized_keys"
+    dest: ~/.ssh/authorized_keys
+  delegate_to: localhost
+  when: mode == 'push'

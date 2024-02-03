@@ -1,0 +1,13 @@
+---
+
+- name: Create tmp Key Storage
+  file:
+    path: "{{ tmp_key_dir }}"
+    state: directory
+  delegate_to: localhost
+  run_once: yes
+
+- name: Copy Localhost Key
+  shell: "cp {{ control_node_key }} {{ tmp_key_dir }}/localhost.key"
+  delegate_to: localhost
+  run_once: yes

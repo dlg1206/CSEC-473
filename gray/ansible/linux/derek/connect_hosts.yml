@@ -2,16 +2,13 @@
 - name: Establish SSH Connectivity
   gather_facts: no
   hosts: all
-  vars:
-    tmp_key_dir: /tmp/keys
-    local_key: ~/.ssh/id_rsa.pub
   tasks:
-    
-
+     
     - name: Ensure Box is Available
       wait_for_connection:
         timeout: 120
 
+  
     - name: Create New Local SSH Key
       include_role:
         name: create_ssh_key

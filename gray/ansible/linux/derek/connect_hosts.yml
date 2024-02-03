@@ -1,0 +1,65 @@
+---
+- name: Establish SSH Connectivity
+  gather_facts: no
+  hosts: all
+  vars:
+    tmp_key_dir: /tmp/keys
+    local_key: ~/.ssh/id_rsa.pub
+  tasks:
+
+    - name: Ensure Box is Available
+      wait_for_connection:
+        timeout: 120
+
+    - name: Create New Local SSH Key
+      include_role:
+        name: create_ssh_key
+      vars:
+        create_local_key: true
+
+    - name: Distribute SSH Keys
+      block:
+
+        - name: Create tmp Key Storage
+          file:
+            path: "{{ tmp_key_dir }}"
+            state: directory
+          delegate_to: localhost
+          run_once: yes
+
+
+        - name: Pull Keys from Nodes
+          synchronize:
+            mode: pull
+            src: "{{ local_key }}"
+            dest: "{{ tmp_key_dir }}/{{ inventory_hostname }}.key"
+          delegate_to: localhost
+
+
+        - name: Copy Localhost Key
+          shell: "cp {{ local_key }} {{ tmp_key_dir }}/localhost.key"
+          delegate_to: localhost
+
+
+        - name: Create authorized_keys File
+          shell: "cat {{ tmp_key_dir}}/* > {{ tmp_key_dir }}/authorized_keys"
+          register: new_keys
+          delegate_to: localhost
+
+
+        - name: Push authorized_keys to Nodes
+          synchronize:
+            src: "{{ tmp_key_dir }}/authorized_keys"
+            dest: ~/.ssh/authorized_keys
+          delegate_to: localhost
+
+
+      # Cleanup; always remove keys even if error
+      always:
+
+        - name: Remove tmp Key Storage
+          file:
+            state: absent
+            path: "{{ tmp_key_dir }}"
+          delegate_to: localhost
+          run_once: yes

@@ -1,0 +1,22 @@
+---
+- name: Get Existing Keys in OpenStack
+  shell: openstack keypair list
+  register: keys
+
+
+# Create new key using host's public key for ansible ssh connectivity
+- name: Create Key with OpenStack CLI if it Doesn't Exist
+  shell: >
+    openstack keypair create {{ ssh_key_name }}
+    --public-key {{ control_node_key }}
+  when: ssh_key_name not in keys.stdout
+
+
+- name: Get Key Details
+  shell: openstack keypair show {{ ssh_key_name }}
+  register: key_details
+
+
+- name: Show Key Details
+  debug:
+    msg: "{{ key_details.stdout.split('\n') }}"

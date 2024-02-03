@@ -1,27 +1,12 @@
 ---
 # tasks file for create_ssh_key
 
-- name: Get Existing Keys
-  shell: openstack keypair list
-  register: keys
+- name: Generate SSH key in OpenStack
+  include_tasks:
+    file: openstack.yml
+  when: ssh_key_name is defined
 
-- name: Create SSH Keys
-  block:
-
-    # Create new key using host's public key for ansible ssh connectivity
-    - name: Execute openstack cli commands
-      shell: >
-        openstack keypair create {{ ssh_key_name }}
-        --public-key {{ control_node_key }}
-    
-    - name: Get new key details
-      shell: openstack keypair show {{ ssh_key_name }}
-      register: key_details
-
-
-    - name: Report key details
-      debug:
-        msg: "{{ key_details.stdout.split('\n') }}"
-      
-
-  when: ssh_key_name not in keys.stdout
+- name: Generate Local SSH Key
+  include_tasks:
+    file: local.yml
+  when: create_local_key is defined

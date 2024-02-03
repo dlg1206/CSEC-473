@@ -1,0 +1,13 @@
+---
+
+- name: Create Key if Does not Exist
+  block:
+    
+    # grep has non-zero return if no match
+    - name: Check for Existing Keys
+      shell: ls ~/.ssh | grep -q id
+  
+  rescue:
+    
+    - name: Generate Key
+      shell: "ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa"

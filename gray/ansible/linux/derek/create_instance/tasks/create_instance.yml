@@ -1,8 +1,27 @@
-- name: Execute OpenStack CLI to Create Instance 
-  shell: >
-    openstack server create {{ box_name }} 
-    --flavor {{ flavor }}
-    --image {{ image }}
-    --boot-from-volume {{ boot_from_volume }}
-    --nic net-id={{ network_id }},v4-fixed-ip={{ box_ip }}
-    --key-name {{ ssh_key }}
+---
+
+- block:
+  - name: Execute OpenStack CLI to Create Instance 
+    shell: >
+      openstack server create {{ box_name }} 
+      --flavor {{ flavor }}
+      --image {{ image }}
+      --boot-from-volume {{ boot_from_volume }}
+      --nic net-id={{ network_id }},v4-fixed-ip={{ box_ip }}
+      --key-name {{ ssh_key }}
+    register: instance_details
+ 
+
+  - name: Show Instance Details
+    debug:
+      msg: "{{ instance_details.stdout.split('\n') }}"
+  
+
+  rescue:
+    
+    - name: Report Failure
+      debug:
+        msg:
+          - "Failed to create {{ box_name }}!"
+          - "stderr: {{ instance_details.stderr }}"
+    

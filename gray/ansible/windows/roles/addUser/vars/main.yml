@@ -1,0 +1,16 @@
+---
+# vars file for changePassword
+users:
+  - VanHalen
+  - Metallica
+  - BonJovi
+  - Beatles
+  - Abba
+  - NeilDiamond
+  - Madonna
+  - Nena
+  - Prince
+  - MJ
+  - Gaga
+  - Beyonce
+password: P@ssword123

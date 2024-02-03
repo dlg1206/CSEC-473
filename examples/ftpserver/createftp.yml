@@ -1,0 +1,26 @@
+---
+# Schuyler Dillon
+# 2/2/2024
+# Alpha - 2235
+# This script installs ftp, starts the service and changes the ubuntu users 
+# password so you can verify ftp is actually running
+- name: Create FTP Service 
+  hosts: 192.168.1.10
+  gather_facts: yes
+  become: yes
+  tasks:
+    - name: installing vsftpd package
+      apt:
+        name: vsftpd
+        state: present
+        update_cache: true
+    - name: configuring systemd for vsftpd
+      systemd:
+        name: vsftpd
+        daemon_reload: true
+        enabled: true
+    - name: Change Ubuntu password
+      user:
+        name: "ubuntu"
+        update_password: always
+        password: "{{ 'password' | password_hash('sha512') }}"

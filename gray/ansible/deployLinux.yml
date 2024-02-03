@@ -1,0 +1,22 @@
+---
+# Schuyler Dillon
+# 2/2/2024
+# Alpha - 2235
+
+#linux deployment setup
+
+# Set variables and call the 2 roles you need to create an openstack machine
+- name: Install openstack.cloud collection
+  hosts: localhost
+  vars:
+    flavorSize: small
+    volumeSize: 100
+    keyName: Ansible-Key
+    network_id: d8dcba1c-9405-433c-a2e5-f4c205e7cade
+    hostip: 192.168.1.10
+    hostname: linux_host
+    hostImage: UbuntuJammy2204-Desktop
+  gather_facts: no
+  roles:
+    - { role: openstack, become: yes }
+    - createHost

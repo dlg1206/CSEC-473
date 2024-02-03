@@ -1,0 +1,12 @@
+---
+# Schuyler Dillon
+# 2/2/2024
+# Alpha - 2235
+# This scirpt calls a roll that adds a bunch of users to domain users and admins
+  - name: Gathering local DC information
+    hosts: dc01
+    gather_facts: no
+    tasks:
+    - name: Creating Users
+      include_role: 
+        name: addUser

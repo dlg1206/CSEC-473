@@ -1,8 +1,0 @@
----
-- hosts: Primary_Domain_Controller
-  vars:
-    hostname: primary-dc
-  tasks:
-  - name: Ensure a server is a domain controller
-    microsoft.ad.domain_controller:
-      dns_domain_name: battleBeat

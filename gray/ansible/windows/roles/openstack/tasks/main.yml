@@ -1,5 +1,0 @@
----
-# tasks file for openstack
-- name: Install openstack.cloud collection
-  ansible.builtin.shell:
-    cmd: "ansible-galaxy collection install openstack.cloud"

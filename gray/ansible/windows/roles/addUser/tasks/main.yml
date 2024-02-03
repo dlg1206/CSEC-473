@@ -1,5 +1,9 @@
 ---
-# tasks file for changePassword
+# Schuyler Dillon
+# 2/2/2024
+# Alpha - 2235
+# adds a bunch of users to the AD domain
+# tasks file for add Users
   - name: Create several domain users
     ansible.windows.win_user:
       name: "{{ item }}"

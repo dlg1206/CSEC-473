@@ -1,4 +1,9 @@
 ---
+# Schuyler Dillon
+# 2/2/2024
+# Alpha - 2235
+# This scirpt promotes a win server to a DC, creates a new AD domain, and DNS server 
+
 - name: Create new Active-Directory Domain & Forest
   hosts: localhost
   vars:

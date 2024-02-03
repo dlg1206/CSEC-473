@@ -1,12 +1,12 @@
 ---
-# Alex Nasca
-# Modified by Schuyler Dillon 
-# 1/17/2024
-# Active directory Domain Controller setup
-
+# Schuyler Dillon
+# 2/2/2024
+# Alpha - 2235
+# Deploys a windows server
+#
 # This script will deploy one domain controller ready windows 2022 server 
 
-#Task 1: download necessary package for openstack deployment
+# This sets variables and calls the 2 roles needed to create a server
 - name: Install openstack.cloud collection
   hosts: localhost
   vars:

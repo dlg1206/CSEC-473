@@ -1,0 +1,37 @@
+---
+
+- name: Linux - Create Key if Does not Exist
+  block:
+    
+    # grep has non-zero return if no match
+    - name: Check for Existing Keys
+      shell: ls ~/.ssh | grep -q id
+  
+  rescue:
+    
+    - name: Linux - Generate Key
+      shell: ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa
+  
+  when: windows != 'true'
+
+
+- name: Windows - Create Key if Does not Exist
+  block:
+    
+    - name: Check for Existing Keys
+      ansible.windows.win_powershell:
+        script: |
+          ls C:\Users\ansible\.ssh | findstr id
+      register: out
+
+    - assert:
+        that: out.output | length > 0
+
+  rescue:
+    
+    - name: Windows - Generate Key
+      ansible.windows.win_powershell:
+        script: |
+          ssh-keygen -q -t rsa -f C:\Users\ansible\.ssh -P ""
+
+  when: windows == 'true'

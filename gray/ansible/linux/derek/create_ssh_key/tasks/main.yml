@@ -1,0 +1,13 @@
+---
+# tasks file for create_ssh_key
+
+- name: Generate SSH key in OpenStack
+  include_tasks:
+    file: openstack.yml
+  when: ssh_key_name is defined
+
+- name: Generate Local SSH Key
+  include_tasks:
+    file: local.yml
+  when: create_local_key is defined
+

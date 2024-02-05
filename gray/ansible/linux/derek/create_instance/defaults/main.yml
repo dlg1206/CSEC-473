@@ -1,0 +1,10 @@
+---
+# defaults file for create_instance
+
+flavor: small
+boot_from_volume: 100
+
+# Windows setup
+win_setup_ps_url: https://raw.githubusercontent.com/RIT-GCI-CyberRange/Openstack-Guides/main/ansible-guides/prepare-for-ansible-windows
+win_setup_script: win_setup.ps1
+user_data: ""

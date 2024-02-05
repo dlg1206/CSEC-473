@@ -1,0 +1,15 @@
+---
+# Use OpenStack CLI to verify the image is ok
+
+- name: Check if image is available in openstack
+  shell: openstack image list | grep -q "{{ image }}"
+  register: out
+  ignore_errors: true
+
+
+- name: Validate findings
+  assert:
+    that: out.rc == 0
+    fail_msg: "{{ image }} is not available in openstack!"
+    success_msg: "{{ image }} is available in openstack"
+

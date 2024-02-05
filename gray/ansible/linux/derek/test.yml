@@ -1,0 +1,69 @@
+---
+
+
+- name: Create Openstack Instances
+  gather_facts: no
+  hosts: all
+  vars:
+    tmp_key_dir: ~/keys
+  tasks:
+    
+    - name: do thing
+      block:
+        - name: tmp dir
+          file:
+            path: "{{ tmp_key_dir }}"
+            state: directory
+          delegate_to: localhost
+          run_once: yes
+
+        - name: Create key if does not exist
+          block:
+            
+            - name: Check for existing keys
+              shell: ls ~/.ssh | grep -q id
+
+
+          rescue:
+        
+            - name: keygen
+              shell: ssh-keygen -q -t rsa -N "" -f ~/.ssh/id_rsa
+
+        - name: copy keys
+          synchronize:
+            mode: pull
+            src: ~/.ssh/id_rsa.pub
+            dest: "{{ tmp_key_dir }}/{{ inventory_hostname }}.key"
+          delegate_to: localhost
+        
+            #        - name: copy local key
+            #copy:
+            #src: ~/.ssh/id_rsa.pub
+            #dest: "{{ tmp_key_dir }}}/key"
+            #delegate_to: localhost
+            #run_once: yes
+        
+        - name: copy local
+          shell: "cp ~/.ssh/id_rsa.pub {{ tmp_key_dir }}/key"
+          delegate_to: localhost
+          run_once: yes
+
+        - name: merge
+          shell: "cat {{ tmp_key_dir}}/* > {{ tmp_key_dir }}/authorized_keys"
+          register: new_keys
+          delegate_to: localhost
+        
+        - name: push
+          synchronize:
+            src: "{{ tmp_key_dir }}/authorized_keys"
+            dest: ~/.ssh/authorized_keys
+          delegate_to: localhost
+
+            #always:
+            # Always delete keys
+            #- name: rm tmp
+            #file: 
+            #state: absent
+            #path: "{{ tmp_key_dir }}"
+              #delegate_to: localhost
+              #run_once: yes

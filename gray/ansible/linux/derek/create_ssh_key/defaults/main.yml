@@ -1,0 +1,5 @@
+---
+# defaults file for create_ssh_key
+
+# Default host key location
+control_node_key: ~/.ssh/id_rsa.pub

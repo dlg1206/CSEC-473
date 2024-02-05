@@ -1,0 +1,11 @@
+---
+# defaults file for connect_ssh
+
+# Default host key location
+control_node_key: ~/.ssh/id_rsa.pub
+tmp_key_dir: /tmp/keys
+
+linux_local_key: ~/.ssh/id_rsa.pub
+windows_local_key: C:\Users\ansible\.ssh\id_rsa.pub
+
+local_key: "{{ linux_local_key }}"

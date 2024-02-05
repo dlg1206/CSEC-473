@@ -1,0 +1,26 @@
+---
+
+- name: Authenticate Ansible Host
+  gather_facts: no
+  hosts: localhost
+  tasks:
+
+    - block:
+        
+        - name: Run Test OpenStack Command
+          shell: "openstack server list"
+        
+        - debug:
+            msg: "Ansible Host is authenticated!"
+
+      rescue:
+
+        - fail:
+            msg: "Ansible Host is not authenticated! 
+              Please run the openstack rc script and try again"
+
+- name: Create OpenStack Instances
+  import_playbook: create_instances.yml
+
+- name: Connect OpenStack Instances with SSH
+  import_playbook: connect_hosts.yml

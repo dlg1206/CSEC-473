@@ -1,0 +1,40 @@
+---
+- name: Prepare for Windows
+  block:
+    - name: Pull Powershell Script
+      get_url:
+        url: "{{ win_setup_ps_url }}"
+        dest: "/tmp/{{ win_setup_script }}"
+
+    - name: Add '--user-data' param
+      set_fact:
+        user_data: "--user-data /tmp/{{ win_setup_script }}"
+
+  when: windows == 'true' 
+
+- block:
+  - name: Execute OpenStack CLI to Create Instance 
+    shell: >
+      openstack server create {{ box_name }} 
+      --flavor {{ flavor }}
+      --image {{ image }}
+      {{ user_data }}
+      --boot-from-volume {{ boot_from_volume }}
+      --nic net-id={{ network_id }},v4-fixed-ip={{ box_ip }}
+      --key-name {{ ssh_key }}
+    register: instance_details
+ 
+
+  - name: Show Instance Details
+    debug:
+      msg: "{{ instance_details.stdout.split('\n') }}"
+  
+
+  rescue:
+    
+    - name: Report Failure
+      debug:
+        msg:
+          - "Failed to create {{ box_name }}!"
+          - "stderr: {{ instance_details.stderr }}"
+    

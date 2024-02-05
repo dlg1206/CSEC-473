@@ -1,0 +1,66 @@
+---
+# tasks file for connect_ssh
+
+
+- name: Set Path to SSH Key
+  set_fact:
+    local_key: "{{ windows_local_key }}"
+  when: windows == 'true'
+
+
+
+- name: Distribute SSH Keys
+  block:
+
+    - name: Prep localhost
+      include_tasks:
+        file: local_ssh.yml
+
+    
+    - name: Pull Linux SSH Key
+      include_tasks:
+        file: linux_ssh.yml
+      vars:
+        mode: 'pull'
+      when: windows != 'true'
+
+
+    - name: Pull Windows SSH Key
+      include_tasks:
+        file: windows_ssh.yml
+      vars:
+        mode: 'pull'
+      when: windows == 'true'
+
+
+    - name: Create authorized_keys File
+      shell: "cat {{ tmp_key_dir}}/* > {{ tmp_key_dir }}/authorized_keys"
+      register: new_keys
+      delegate_to: localhost
+      run_once: yes
+
+  
+    - name: Linux - Push SSH Keys
+      include_tasks:
+        file: linux_ssh.yml
+      vars:
+        mode: 'push'
+      when: windows != 'true'
+
+
+    - name: Windows - Push SSH Keys
+      include_tasks:
+        file: windows_ssh.yml
+      vars:
+        mode: 'push'
+      when: windows == 'true'
+
+  # Cleanup; always remove keys even if error
+  always:
+
+    - name: Remove tmp Key Storage
+      file:
+        state: directory
+        path: "{{ tmp_key_dir }}"
+      delegate_to: localhost
+      run_once: yes

@@ -1,0 +1,24 @@
+---
+- name: Establish SSH Connectivity
+  gather_facts: no
+  hosts: all
+  tasks:
+     
+    - name: Ensure Box is Available
+      wait_for_connection:
+        timeout: 120
+
+  
+    - name: Create New Local SSH Key
+      include_role:
+        name: create_ssh_key
+      vars:
+        windows: "{{ hostvars[inventory_hostname].windows | default('false') }}"
+        create_local_key: true
+
+
+    - name: Connect Boxes
+      include_role:
+        name: connect_ssh
+      vars:
+        windows: "{{ hostvars[inventory_hostname].windows | default('false') }}"

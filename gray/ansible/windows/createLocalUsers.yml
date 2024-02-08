@@ -1,0 +1,13 @@
+---
+# Zach Riback
+# 2/7/2024
+# Alpha - 2235
+# Copied and edited Schuyler's script 
+# Calls a roll to add local users to windows boxes
+  - name: Gathering local DC information
+    hosts: bwindows
+    gather_facts: no
+    tasks:
+    - name: Create local users
+      include_role: 
+        name: addLocalUsers

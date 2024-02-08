@@ -1,0 +1,65 @@
+# Zachary Riback
+# 2/7/2024
+# Alpha 2235
+# Create SMB share locations, create SMB shares, and put in appropriate files from smb_files directory
+---
+- name: Deploy SMB for Windows
+  hosts: Music
+
+  tasks:
+    # Add directory location if it does not already exist
+    - name: Add directory locations for SMB shares
+      win_file:
+        path: "C:\\share\\{{ item }}"
+        state: directory
+      loop:
+        - lyrics
+        - artists
+        - songs
+    # Make previously created directory into SMB share
+    - name: Add puilic SMB shares
+      ansible.windows.win_share:
+        name: "{{ item }}"
+        description: "Cool file share!"
+        path: "C:\\share\\{{ item }}"
+        list: true
+        full: gray_scoring,rockstar,melody
+        read: disco_queen,microphone,singer,speaker,soprano,songwriter
+      loop:
+        - lyrics
+        - artists
+        - songs
+    # Copy over appropriate files in the shares
+    - name: Copy lyric files
+      win_copy:
+        src: "./smb_files/{{ item }}"
+        dest: "C:\\share\\lyrics"
+      loop:
+        - all_along_the_watchtower_lyrics.txt
+        - hotel_california_lyrics.txt
+        - sweet_talkin_woman_lyrics.txt
+    - name: Copy song files
+      win_copy:
+        src: "./smb_files/{{ item }}"
+        dest: "C:\\share\\songs"
+      loop:
+        - pop_songs.txt
+        - rock_songs.txt
+        - rap_songs.txt
+    - name: Copy artist files
+      win_copy:
+        src: "./smb_files/{{ item }}"
+        dest: "C:\\share\\artists"
+      loop:
+        - pop_artists.txt
+        - rock_artists.txt
+        - classical_musicians.txt
+
+
+
+
+
+
+
+
+

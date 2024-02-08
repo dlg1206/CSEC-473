@@ -1,0 +1,4 @@
+---
+# vars file for addLocalUsers
+default_user_password: "changeme"
+default_admin_password: "changeme"

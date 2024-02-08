@@ -1,0 +1,33 @@
+---
+# tasks file for addLocalUsers
+# Zach Riback
+# 2/7/2024
+# Alpha - 2235
+# Role to create the local users for Windows boxes
+
+- name: Create unpriv local windows users
+  ansible.windows.win_user:
+    name: "{{ item }}"
+    password: "{{ default_user_password }}"
+    state: present
+    groups:
+      - Users
+  loop:
+    - disco_queen
+    - microphone
+    - singer
+    - speaker
+    - soprano
+    - songwriter
+  
+- name: Create priv local windows users
+  ansible.windows.win_user:
+    name: "{{ item }}"
+    password: "{{ default_admin_password }}"
+    state: present
+    groups:
+      - Users
+      - Administrators
+  loop:
+    - rockstar
+    - melody

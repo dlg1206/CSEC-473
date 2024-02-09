@@ -1,6 +1,6 @@
 ---
 - name: Install MySQL and Create a Database with a Table
-  hosts: linux # change to linux host from inventory file
+  hosts: 192.168.1.14 # Gray Team Lyrics box 
   become: yes
   vars:
     mysql_root_password: root

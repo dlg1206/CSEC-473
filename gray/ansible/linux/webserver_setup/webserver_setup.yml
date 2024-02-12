@@ -1,0 +1,112 @@
+---
+- name: Configure a linux machine into a webserver
+# Change host depending on who you want to configure
+  hosts: http
+  vars_files:
+    - default.yml
+
+  tasks:
+
+# Installs latest Apt onto the Linux webserver to get latest apache
+  - name: Install Latest Apt
+    apt: name={{item}} update_cache=yes state=latest force_apt_get=yes
+    loop: [ 'aptitude' ]
+    become: yes
+
+# Installs Apache2 onto the Linux webserver
+  - name: Install Apache2
+    apt:
+      name: apache2
+      update_cache: yes
+      state: latest
+    become: yes
+
+# Install MySQL-Server onto the Linux webserver
+  - name: Install MySQL
+    apt:
+      name: mysql-server
+      update_cache: yes
+      state: latest
+    become: yes
+
+# Install php on the Linux webserver
+  - name: Install php
+    apt:
+      pkg:
+        - php-curl
+        - php-gd
+        - php-mbstring
+        - php-xml
+        - php-xmlrpc
+        - php-soap
+        - php-intl
+        - php-zip
+        - php 
+        - libapache2-mod-php
+      update_cache: yes
+      state: latest
+    become: yes
+
+# Creates the /var/www/... document root for the .html files to be held
+  - name: Create Document For Webserver
+    file:
+      path: "/var/www/{{ http_conf }}"
+      state: directory
+      owner: "{{ app_user }}"
+      mode: '0755'
+    become: yes
+
+# Copies local directory with document Root files to the webserver one
+  - name: Copy Test Page
+    copy:
+      # Change if located files in a different directory
+      src: "files/documentRoot/"
+      dest: "/var/www/{{ http_conf }}/"
+    become: yes
+
+# Sets up Apache configuration file
+  - name: Set Up Apache virtualhost
+    template:
+      # Change if located apache config file somewhere else
+      src: "files/apache-template.conf"
+      dest: "/etc/apache2/sites-available/{{ http_conf }}"
+    become: yes
+
+  - name: Enable new site
+    shell: /usr/sbin/a2ensite {{ http_conf }}
+    
+    # For reconfiguration
+    notify: Reload Apache
+    become: yes
+
+# Disables default apache site
+  - name: Disable default Apache site
+    shell: /usr/sbin/a2dissite 000-default.conf
+    when: disable_default
+
+    # For reconfiguration
+    notify: Reload Apache
+    become: yes 
+
+# Creates firewall rule to allow HTTP on port dedicated for HTTP (80)
+  - name: "UFW - Allow HTTP on port {{ http_port }}"
+    ufw:
+      rule: allow
+      port: "{{ http_port }}"
+      proto: tcp
+    become: yes
+
+  handlers:
+    # Reloads Apache2 to reconfigure
+    - name: Reload Apache
+      service:
+        name: apache2
+        state: reloaded
+      become: yes
+
+    # Restarts Apache2 to reconfigure
+    - name: Restart Apache
+      service:
+        name: apache2
+        state: restarted
+      become: yes

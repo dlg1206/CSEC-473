@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        /* Add your CSS styles here */
+         body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1c1425;
+        }
+
+        header {
+            background-color: #1c1425;
+            color: #00000;
+            padding: 1em;
+            text-align: center;
+        }
+	nav {
+            background-color: #261c31;
+            padding: 0.5em;
+            text-align: center;
+        }
+	
+	nav a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 1em;
+        }
+
+        form {
+            background-color: #1c1425;
+            padding: 2em;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+	    margin: 0 auto;
+        }
+	
+	footer {
+            background-color: #1c1425;
+            color: #fff;
+            padding: 1em;
+            text-align: center;
+	    position: absolute;
+	    bottom: 0;
+	    width: 100%;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5em;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.5em;
+            margin-bottom: 1em;
+            border: 2px solid #e5c6ef;
+            border-radius: 3px;
+        }
+
+        button {
+            background-color: #261c31;
+            color: #fff;
+            padding: 0.5em 1em;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1 style="color:#c28cff;font-family:Verdana;font-size:50px">The Kareoke Arena</h1>
+        <p style="color:#c28cff;font-family:Luminari;font-style:italic;font-size:21px">Where Music Reigns Supreme!</p>
+    </header>
+
+    <nav>
+        <a href="index.html#about-us" style="color:#e5c6ef;font-family:Arial Black;font-style: bold">About Us</a>
+        <a href="index.html#events" style="color:#e5c6ef;font-family:Arial Black;font-style: bold">Events</a>
+        <a href="index.html#menu" style="color:#e5c6ef;font-family:Arial Black;font-style: bold">Menu</a>
+	    <a href="index.html#Songs" style="color:#e5c6ef;font-family:Arial Black;font-style: bold">Songs</a>
+        <a href="index.html#contact" style="color:#e5c6ef;font-family:Arial Black;font-style: bold">Contact</a>
+    </nav>
+
+    <form>
+        <h2 style="color:#e5c6ef;font-family:Monaco;font-style: bold;font-size:26px">Input your information to buy your tickets ($9.99 per ticket)</h2>
+        
+        <label for="Number of Tickets" style="color:#e5c6ef;font-family:Georgia;font-size:19px">Number of Tickets:</label>
+        <input type="number" id="number of Tickets" name="numberOfTickets" required>
+        
+        <label for="email" style="color:#e5c6ef;font-family:Georgia;font-size:19px">Email Address:</label>
+        <input type="email" id="emailAddress" name="email address" required>
+
+        <label for="CreditCard" style="color:#e5c6ef;font-family:Georgia;font-size:19px">Credit Card Number:</label>
+        <input type="username" id="creditCardNumber" name="Credit Card Number" required>
+
+        <label for="CreditCard" style="color:#e5c6ef;font-family:Georgia;font-size:19px">Expiration Date:</label>
+        <input type="month" id="expirationDate" name="Expiration Date" required>
+
+        <label for="CreditCard" style="color:#e5c6ef;font-family:Georgia;font-size:19px">Security Number:</label>
+        <input type="password" id="securityNumber" name="SecurityNumber" required>
+
+        <button type="submit" style="color:#c28cff;font-family:Luminari;font-size:18px">Submit</button>
+    </form>
+</body>
+
+</html>

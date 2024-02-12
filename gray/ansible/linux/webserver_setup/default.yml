@@ -1,0 +1,14 @@
+---
+# File with values that might change based on what is required of the webserver
+app_user: "ubuntu"
+
+# name of http host config (for configuration file)
+http_conf: "kareoke.com.conf"
+
+http_host: "www.kareoke.com"
+
+# http port number (80 by default)
+http_port: "80"
+
+# Decides whether to disable default apache2 site at 000-default.conf
+disable_default: True

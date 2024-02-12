@@ -1,0 +1,20 @@
+#Neko Ferrara
+#CDT Alphateam
+#Very simple Ansible script that updates the linux machine and then installs telnet for gray team infrastructure
+
+--- 
+
+- name: Install telnet service on linux
+  hosts: linux 
+  become: yes 
+
+  tasks: 
+    - name: Update cache #update the linux machine. 
+      apt: 
+        update_cache: yes  
+    - name: Install Telnet # installs the telnet package 
+      apt: 
+        name: telnet
+        name: telnetd  
+        state: present
+    

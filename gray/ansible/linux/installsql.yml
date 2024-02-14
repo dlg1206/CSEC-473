@@ -1,15 +1,16 @@
 ---
 - name: Install MySQL and Create a Database with a Table
-  hosts: 192.168.1.14 # Gray Team Lyrics box 
+  hosts: Lyrics # change to linux host from inventory file
   become: yes
   vars:
     mysql_root_password: root
     mysql_db_name: karoake
-    mysql_db_user: user # Change this 
+    mysql_db_user: GrayScoring # Change this
     mysql_db_password: pass # And this
-    sql_query: sql_query.sql # This is to query against the karoake database. Keep this place in the 
+    sql_query: sql_query.sql # This is to query against the karoake database. Keep this place in the
     # same directory as the script.
-    destination: /home/ubuntu/Desktop #can change this to meet nees of the database.
+    destination: /home/ubuntu/Desktop #can change this to meet need of the database. 
+    webserver_ip: 192.168.0.219 # WEB SERVER IP. NOT DATABASE IP 
 
   tasks:
     - name: Update apt cache
@@ -58,7 +59,7 @@
         login_user: root
         login_password: "{{ mysql_root_password }}"
 
-    - name: Copy over SQL Query 
+    - name: Copy over SQL Query
       copy:
         src: "{{ sql_query }}"
         dest: "{{ destination }}"
@@ -72,5 +73,25 @@
         login_host: localhost
         login_unix_socket: /var/run/mysqld/mysqld.sock
         target: /home/ubuntu/Desktop/sql_query.sql
-  
-                               
+
+    - name: Allow connections from webserver
+      ufw:
+        rule: allow
+        src: "{{ webserver_ip }}"
+        dest: any
+        port: 3306
+      notify: Reload UFW
+    - name: Change Bind address
+      lineinfile: 
+        path: /etc/mysql/mysql.conf.d/mysqld.cnf 
+        regexp: '^bind-address' 
+        line: 'bind-address = 0.0.0.0'
+      notify: Restart Mysql    
+  handlers:
+    - name: Reload UFW
+      ufw:
+        state: reloaded
+    - name: Restart Mysql
+      service: 
+        name: mysql
+        state: restarted

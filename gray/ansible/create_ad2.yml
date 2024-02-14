@@ -1,0 +1,111 @@
+- name: Create new Active-Directory Domain & Forest
+  hosts: windows
+  vars:
+    dc_address: 192.168.1.196
+    dc_netmask_cidr: 24
+    dc_gateway: 192.168.0.1
+    dc_hostname: 'windows'
+    domain_name: "melody.mayhem"
+    local_admin: '.\administrator'
+    dc_password: 'P@ssw0rd'
+    recovery_password: 'P@ssw0rd'
+    upstream_dns_1: 192.168.100.101
+    upstream_dns_2: 192.168.100.101
+    reverse_dns_zone: "192.168.0.0/16"
+    dns_pw: "P@ssw0rd"
+    dns_serv: "dc01.melody.mayhem"
+  gather_facts: no
+
+
+  tasks:
+  - name: Add host to Ansible inventory
+    add_host:
+      name: '{{ dc_address }}'
+      ansible_user: 'ansible'
+      ansible_password: 'ansible'
+      ansible_connection: winrm
+      ansible_winrm_transport: ntlm
+      ansible_winrm_server_cert_validation: ignore
+  - name: Set Password
+    win_user:
+      name: administrator
+      password: "{{ dc_password }}"
+      state: present
+    ignore_errors: True
+  - name: Add host to Ansible inventory with new Password
+    add_host:
+      name: '{{ dc_address }}'
+      ansible_user: '{{ local_admin }}'
+      ansible_password: '{{ dc_password }}'
+      ansible_connection: winrm
+      ansible_winrm_transport: ntlm
+      ansible_winrm_server_cert_validation: ignore
+
+
+
+  - name: Turn off firewall for Domain, Public and Private
+    win_firewall:
+      state: disabled
+      profiles:
+      - Domain
+      - Private
+      - Public
+    tags: disable_firewall
+  - name: Change the hostname 
+    win_hostname:
+      name: '{{ dc_hostname }}'
+    register: res
+  - name: Reboot
+    win_reboot:
+    when: res.reboot_required   
+  
+  - name: install AD
+    win_feature:
+      name: AD-Domain-Services
+      include_management_tools: yes
+      include_sub_features: yes
+      state: present
+    register: result
+  - name: reboot server
+    win_reboot:
+      msg: "rebooting"
+      pre_reboot_delay: 15
+    when: result.changed
+
+  - name: configure dns
+    win_dns_client:
+      adapter_names: '*'
+      ipv4_addresses:
+        - 192.168.100.101
+
+  - name: join domain
+    win_domain_membership:
+      dns_domain_name: "{{ domain_name }}" 
+      hostname: "{{ dc_hostname }}"
+      domain_admin_user: "Administrator@melody.mayhem"
+      domain_admin_password: "{{ dns_pw }}"
+      state: domain
+    register: domain_state
+
+  - name: rebooting 
+    win_reboot:
+      msg: "rebooting"
+      pre_reboot_delay: 15
+    when: domain_state.reboot_required
+
+
+
+  - name: Promote this server to Additional DC
+    win_domain_controller:
+         dns_domain_name: '{{ domain_name }}'
+         domain_admin_user: 'Administrator@melody.mayhem'
+         domain_admin_password: '{{ dns_pw }}'
+         safe_mode_password: '{{ dns_pw }}'
+         state: domain_controller
+         log_path: c:\ansible_win_domain_controller.txt
+    register: dc_promotion
+
+  - name: reboot after promotion
+    win_reboot:
+    when: dc_promotion.reboot_required
+

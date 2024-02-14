@@ -1,46 +1,64 @@
 -- SQL query for karoake
 
-CREATE USER IF NOT EXISTS 'username4'@'localhost' IDENTIFIED BY 'password1';
-CREATE USER IF NOT EXISTS 'username5'@'localhost' IDENTIFIED BY 'password2';
-CREATE USER IF NOT EXISTS 'username6'@'localhost' IDENTIFIED BY 'password3';
+CREATE USER IF NOT EXISTS 'FreeBird'@'localhost' IDENTIFIED BY 'password1';
+CREATE USER IF NOT EXISTS 'CountryRoads'@'localhost' IDENTIFIED BY 'password1';
+CREATE USER IF NOT EXISTS 'SweetCaroline'@'localhost' IDENTIFIED BY 'password1';
+
+-- Remote user for to login with WEBSERVER IP ADDRESS. NOT DATABASE ADDRESS
+CREATE USER IF NOT EXISTS 'melody'@'192.168.0.219' IDENTIFIED BY 'password1'; 
+
 -- Add more users as needed Change the users and passwords when going into production
 
 -- GRanting permissions for the users (Test Users. Need to change)
-GRANT ALL PRIVILEGES ON *.* TO 'username4'@'localhost';
-GRANT ALL PRIVILEGES ON *.* TO 'username5'@'localhost';
-GRANT ALL PRIVILEGES ON *.* TO 'username6'@'localhost';
+GRANT ALL PRIVILEGES ON *.* TO 'FreeBird'@'localhost';
+GRANT ALL PRIVILEGES ON *.* TO 'CountryRoads'@'localhost';
+GRANT ALL PRIVILEGES ON *.* TO 'SweetCaroline'@'localhost';
+GRANT ALL PRIVILEGES ON *.* TO 'GrayScoring'@'localhost';
+GRANT ALL PRIVILEGES ON *.* TO 'melody'@'192.168.0.219' WITH GRANT OPTION; -- WEBSERVER ADDRESS. NOT DATABASE ADDRESS
+FLUSH PRIVILEGES;
+
+-- Table for Website Credentials
+CREATE TABLE IF NOT EXISTS Credentials (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(255) NOT NULL,
+        password VARCHAR(255) NOT NULL
+        );
 
 -- Table for Songs
 CREATE TABLE IF NOT EXISTS Songs (
-    SongID INT PRIMARY KEY,
-    Title NVARCHAR(255),
-    Artist NVARCHAR(255),
-    Genre NVARCHAR(100)
-);
+            SongID INT PRIMARY KEY,
+            Title NVARCHAR(255),
+            Artist NVARCHAR(255),
+            Genre NVARCHAR(100)
+        );
 
 
--- Table for Song Requests
+        -- Table for Song Requests
 CREATE TABLE IF NOT EXISTS Tabs (
-    TabID INT PRIMARY KEY,
-    tabName NVARCHAR(255),
-    Amount INT
-);
+            TabID INT PRIMARY KEY,
+            tabName NVARCHAR(255),
+            AMOUNT NVARCHAR(255)
+        );
 
--- Additional tables can go below, unsure of what else. 
+        -- Additional tables can go below, unsure of what else.
 
 
 
--- Sample Data 
+-- Sample Data
 INSERT INTO Songs (SongID, Title, Artist)
-VALUES 
+VALUES
     (1, 'Song1', 'Artist1'),
     (2, 'Song2', 'Artist2'),
     (3, 'Song3', 'Artist3');
 
 
-INSERT INTO Tabs (TabsID, NAME, AMOUNT)
-VALUES 
+INSERT INTO Tabs (TabID, tabName, AMOUNT)
+VALUES
     (1, 'Tab1', '100'),
     (2, 'Tab2', '200'),
     (3, 'Tab3', '300');
 
+
+INSERT INTO Credentials(id, username, password)
+VALUES
+    (1, 'remote', 'password1')

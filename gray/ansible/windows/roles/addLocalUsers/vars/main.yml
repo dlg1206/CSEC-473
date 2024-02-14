@@ -1,4 +1,4 @@
 ---
 # vars file for addLocalUsers
-default_user_password: "changeme"
-default_admin_password: "changeme"
+default_user_password: "P@ssw0rd"
+default_admin_password: "P@ssw0rd"

@@ -18,7 +18,7 @@ if ($_SESSION['loggedin'] !== true) {
     <h1>Welcome</h1>
     <p>You are logged in! Here are the karaoke songs:</p>
 <h1><?php	
-$conn = mysqli_connect("192.168.3.14", "GrayWebserver", "password1", "karaoke");
+$conn = mysqli_connect("192.168.3.14", "GrayWebserver", "password1", "karoake");
 $query = "SELECT * FROM Songs";
 if ($result=mysqli_query($conn,$query))
 {

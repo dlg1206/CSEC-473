@@ -1,18 +1,18 @@
 <?php
 
-$conn = mysqli_connect("192.168.2.6", "melody", "password", "account");
+$conn = mysqli_connect("192.168.1.10", "GrayWebserver", "password1", "karoake");
 
 $username = $_POST['username'];
 $password = $_POST['password'];
 
 
-$query = "SELECT * FROM User WHERE username = '$username' and password = '$password'";
+$query = "SELECT * FROM Credentials WHERE username = '$username' and password = '$password'";
 
 $result=mysqli_query($conn,$query);
 
 $rowCount = mysqli_num_rows($result);
 
-if ($rowCount> 0)
+if ($rowCount > 0)
 {
 	session_start();
 	$_SESSION['loggedin'] = true;

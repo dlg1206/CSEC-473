@@ -1,6 +1,6 @@
 <?php
 
-$conn = mysqli_connect("192.168.1.10", "GrayWebserver", "password1", "karoake");
+$conn = mysqli_connect("192.168.3.14", "GrayWebserver", "password1", "karoake");
 
 $username = $_POST['username'];
 $password = $_POST['password'];

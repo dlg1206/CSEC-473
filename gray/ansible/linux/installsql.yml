@@ -1,6 +1,6 @@
 ---
 - name: Install MySQL and Create a Database with a Table
-  hosts: Lyrics # change to linux host from inventory file
+  hosts: linux # change to linux host from inventory file
   become: yes
   vars:
     mysql_root_password: root
@@ -10,7 +10,7 @@
     sql_query: sql_query.sql # This is to query against the karoake database. Keep this place in the
     # same directory as the script.
     destination: /home/ubuntu/Desktop #can change this to meet need of the database. 
-    webserver_ip: 192.168.0.219 # WEB SERVER IP. NOT DATABASE IP 
+    webserver_ip: 192.168.1.10 # CHANGE TO THE WEB SERVER IP
 
   tasks:
     - name: Update apt cache
@@ -73,6 +73,12 @@
         login_host: localhost
         login_unix_socket: /var/run/mysqld/mysqld.sock
         target: /home/ubuntu/Desktop/sql_query.sql
+      # Key to allowing remote connections 
+    - name: Delete SQL query file
+      file:
+        path: "{{ destination }}/sql_query.sql"
+        state: absent
+
 
     - name: Allow connections from webserver
       ufw:
@@ -81,6 +87,7 @@
         dest: any
         port: 3306
       notify: Reload UFW
+      # change the bind address within the conf file for the DATABASE so that it can accept connections from MY SQL 
     - name: Change Bind address
       lineinfile: 
         path: /etc/mysql/mysql.conf.d/mysqld.cnf 

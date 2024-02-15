@@ -4,8 +4,8 @@ CREATE USER IF NOT EXISTS 'FreeBird'@'localhost' IDENTIFIED BY 'password1';
 CREATE USER IF NOT EXISTS 'CountryRoads'@'localhost' IDENTIFIED BY 'password1';
 CREATE USER IF NOT EXISTS 'SweetCaroline'@'localhost' IDENTIFIED BY 'password1';
 
--- Remote user for to login with WEBSERVER IP ADDRESS. NOT DATABASE ADDRESS
-CREATE USER IF NOT EXISTS 'melody'@'192.168.0.219' IDENTIFIED BY 'password1'; 
+-- Remote user for to login with WEBSERVER IP ADDRESS. 
+CREATE USER IF NOT EXISTS 'GrayWebserver'@'192.168.1.10' IDENTIFIED BY 'password1'; 
 
 -- Add more users as needed Change the users and passwords when going into production
 
@@ -14,7 +14,7 @@ GRANT ALL PRIVILEGES ON *.* TO 'FreeBird'@'localhost';
 GRANT ALL PRIVILEGES ON *.* TO 'CountryRoads'@'localhost';
 GRANT ALL PRIVILEGES ON *.* TO 'SweetCaroline'@'localhost';
 GRANT ALL PRIVILEGES ON *.* TO 'GrayScoring'@'localhost';
-GRANT ALL PRIVILEGES ON *.* TO 'melody'@'192.168.0.219' WITH GRANT OPTION; -- WEBSERVER ADDRESS. NOT DATABASE ADDRESS
+GRANT ALL PRIVILEGES ON *.* TO 'GrayWebserver'@'192.168.1.10' WITH GRANT OPTION; -- CHANGE TO WEBSERVER ADDRESS
 FLUSH PRIVILEGES;
 
 -- Table for Website Credentials
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS Credentials (
 
 -- Table for Songs
 CREATE TABLE IF NOT EXISTS Songs (
-            SongID INT PRIMARY KEY,
+            SongID INT AUTO_INCREMENT PRIMARY KEY,
             Title NVARCHAR(255),
             Artist NVARCHAR(255),
             Genre NVARCHAR(100)
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS Songs (
 
         -- Table for Song Requests
 CREATE TABLE IF NOT EXISTS Tabs (
-            TabID INT PRIMARY KEY,
+            TabID INT AUTO_INCREMENT PRIMARY KEY,
             tabName NVARCHAR(255),
             AMOUNT NVARCHAR(255)
         );
@@ -45,20 +45,20 @@ CREATE TABLE IF NOT EXISTS Tabs (
 
 
 -- Sample Data
-INSERT INTO Songs (SongID, Title, Artist)
+INSERT IGNORE INTO Songs (SongID, Title, Artist)
 VALUES
     (1, 'Song1', 'Artist1'),
     (2, 'Song2', 'Artist2'),
     (3, 'Song3', 'Artist3');
 
 
-INSERT INTO Tabs (TabID, tabName, AMOUNT)
+INSERT IGNORE INTO Tabs (TabID, tabName, AMOUNT)
 VALUES
     (1, 'Tab1', '100'),
     (2, 'Tab2', '200'),
     (3, 'Tab3', '300');
 
 
-INSERT INTO Credentials(id, username, password)
+INSERT IGNORE INTO Credentials(id, username, password)
 VALUES
     (1, 'remote', 'password1')

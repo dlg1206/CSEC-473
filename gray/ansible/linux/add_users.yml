@@ -1,0 +1,33 @@
+---
+- name: Add Linux users
+  hosts: all
+  become: yes
+  tasks:
+    - block:
+      - name: Add admin users
+        user:
+          name: "{{ item.name }}"
+          password: "{{ item.password | password_hash('sha512') }}"
+          groups: "sudo"
+          shell: "/bin/bash"
+          state: present
+        with_items:
+          - { name: 'winner', password: 'password1' }
+          - { name: 'bartender', password: 'password1' }
+          - { name: 'ansible', password: 'WeR0ck!' }
+          - { name: 'GrayScoring', password: 'WeR0ck!' }
+    - block:
+      - name: Add non admin users
+        user:
+          name: "{{ item.name }}"
+          password: "{{ item.password | password_hash('sha512') }}"
+          groups: "users"
+          shell: "/bin/bash"
+          state: present
+        with_items:
+          - { name: 'stage', password: 'password1' }
+          - { name: 'mayhem', password: 'password1' }
+          - { name: 'harmony', password: 'password1' }
+          - { name: 'ur_favorite_band', password: 'password1' }
+          - { name: 'alto', password: 'password1' }
+          - { name: 'bar', password: 'password1' }

@@ -1,6 +1,6 @@
 ---
 - name: Install and configure vsftpd
-  hosts: all
+  hosts: linux
   become: yes
   vars:
     vsftpd_enable_service: true

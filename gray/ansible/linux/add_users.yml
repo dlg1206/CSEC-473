@@ -1,6 +1,6 @@
 ---
 - name: Add Linux users
-  hosts: all
+  hosts: linux
   become: yes
   tasks:
     - block:

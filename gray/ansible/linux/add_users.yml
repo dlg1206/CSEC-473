@@ -14,7 +14,7 @@
         with_items:
           - { name: 'winner', password: 'password1' }
           - { name: 'bartender', password: 'password1' }
-          - { name: 'ansible', password: 'WeR0ck!' }
+          - { name: 'ansible', password: 'ansible' }
           - { name: 'GrayScoring', password: 'WeR0ck!' }
     - block:
       - name: Add non admin users
